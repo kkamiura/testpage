@@ -21,7 +21,7 @@
 
   <h1>貸出PCリストデモ</h1>
 
-  <section>
+ <!-- <section>
     <h2>① メッセージ表示</h2>
     <button onclick="showMessage()">メッセージを表示</button>
     <p id="messageArea"></p>
@@ -34,19 +34,23 @@
     <p id="nameResult"></p>
   </section>
 
-  <section>
-    <h2>③ 現在の時刻</h2>
-    <p>現在時刻：<span id="clock"></span></p>
-  </section>
-
-  <section>
+    <section>
     <h2>④ スタイル切替</h2>
     <button onclick="changeStyle()">スタイルを変更</button>
     <p id="styleTarget">このテキストのスタイルが変わります。</p>
   </section>
+  
+  -->
 
   <section>
-    <h2>⑤ 貸出PCリスト検索</h2>
+    <h2>現在の時刻</h2>
+    <p>現在時刻：<span id="clock"></span></p>
+  </section>
+
+
+
+  <section>
+    <h2>貸出PCリスト検索</h2>
     <p>最終更新：<span id="lastUpdate">読み込み中…</span></p>
     <input type="text" id="filterInput" placeholder="機種名で絞り込み" disabled onkeyup="filterPC()">
     <table id="pcTable">
