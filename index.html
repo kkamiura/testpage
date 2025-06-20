@@ -2,45 +2,105 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>GitHub Pages 研修サイト</title>
-  <meta name="keywords" content="GitHub, Pages, 静的ホスティング, 研修">
-  <meta name="description" content="GitHub Pagesを使った静的Webサイト公開の研修ページです。">
+  <title>GitHub Pages JavaScriptデモ</title>
+  <meta name="description" content="GitHub PagesでJavaScriptが使えることを示す見本ページです。">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    section {
+      margin-bottom: 30px;
+      padding: 15px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 1em;
+    }
+    input {
+      padding: 6px;
+      margin-right: 10px;
+    }
+    #clock {
+      font-weight: bold;
+      font-size: 1.2em;
+      color: #d35400;
+    }
+  </style>
 </head>
 <body>
-  <div id="outer">
-    <header>
-      <h1>GitHub Pages 研修用 サンプルサイト</h1>
-      <p>このページは、GitHub Pages を利用した静的ホスティングの確認用ページです。</p>
-    </header>
 
-    <div id="content">
-      <div class="inner">
-        <h2>見出し（大） - GitHub Pagesとは？</h2>
-        <p>GitHub Pagesは、HTMLやCSSなどの静的ファイルをGitHubリポジトリから直接Web公開できるサービスです。</p>
+  <h1>GitHub Pages × JavaScript 見本ページ</h1>
+  <p>このページは静的HTMLのみで構成されており、JavaScriptによる動的な動作を体験できます。</p>
 
-        <h3>見出し（中） - どんな用途に使える？</h3>
-        <p>ポートフォリオ、プロジェクト紹介、ドキュメントの公開などに適しています。</p>
+  <section>
+    <h2>① ボタンを押すとメッセージを表示</h2>
+    <button onclick="showMessage()">メッセージを表示</button>
+    <p id="messageArea"></p>
+  </section>
 
-        <h4>見出し（小） - 特徴</h4>
-        <p>無料・HTTPS対応・独自ドメインの設定も可能です。</p>
-      </div>
-    </div>
+  <section>
+    <h2>② 入力フォームの内容を表示</h2>
+    <input type="text" id="nameInput" placeholder="名前を入力してください">
+    <button onclick="displayName()">表示</button>
+    <p id="nameResult"></p>
+  </section>
 
-    <aside>
-      <div class="right-title">関連リンク</div>
-      <div class="link">
-        <ul>
-          <li><a href="https://pages.github.com/" target="_blank">GitHub Pages 公式サイト</a></li>
-          <li><a href="https://docs.github.com/ja/pages" target="_blank">GitHub Pages ドキュメント</a></li>
-        </ul>
-      </div>
-    </aside>
+  <section>
+    <h2>③ 現在の時刻を表示</h2>
+    <p>現在時刻：<span id="clock"></span></p>
+  </section>
 
-    <footer>
-      © 2025 GitHub Pages 研修サイト
-    </footer>
-  </div>
+  <section>
+    <h2>④ 要素のスタイルを動的に変更</h2>
+    <button onclick="changeStyle()">スタイルを変更</button>
+    <p id="styleTarget">この文章のスタイルが変わります。</p>
+  </section>
+
+  <footer>
+    <p>© 2025 JavaScript デモページ</p>
+  </footer>
+
+  <script>
+    // ① メッセージを表示する関数
+    function showMessage() {
+      document.getElementById("messageArea").textContent = "こんにちは！GitHub Pages上でもJavaScriptは使えます。";
+    }
+
+    // ② 入力された名前を表示する関数
+    function displayName() {
+      const name = document.getElementById("nameInput").value;
+      const output = name ? `こんにちは、${name}さん！` : "名前が入力されていません。";
+      document.getElementById("nameResult").textContent = output;
+    }
+
+    // ③ 現在の時刻を1秒ごとに表示
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString();
+      document.getElementById("clock").textContent = timeStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock(); // 初期表示
+
+    // ④ スタイル変更
+    function changeStyle() {
+      const target = document.getElementById("styleTarget");
+      target.style.color = "white";
+      target.style.backgroundColor = "#2980b9";
+      target.style.padding = "10px";
+      target.style.borderRadius = "6px";
+    }
+  </script>
+
 </body>
 </html>
