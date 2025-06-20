@@ -2,16 +2,15 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>GitHub Pages × JavaScript 見本ページ（GAS JSONP版）</title>
-  <meta name="description" content="GitHub PagesでJavaScriptとGoogle Apps Script公開JSONPを組み合わせた見本ページです。">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>貸出PCリストデモ（自動更新時刻＆色分け版）</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
     h1 { color: #2c3e50; }
     section { margin-bottom: 30px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    button { margin-top: 10px; padding: 8px 16px; font-size: 1em; }
+    button { margin-top: 10px; padding: 8px 16px; }
     input { padding: 6px; margin-right: 10px; }
-    #clock { font-weight: bold; font-size: 1.2em; color: #d35400; }
+    #clock, #lastUpdate { font-weight: bold; }
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
     th { background: #eee; }
@@ -20,36 +19,35 @@
 </head>
 <body>
 
-  <h1>GitHub Pages × JavaScript 見本ページ（GAS JSONP版）</h1>
-  <p>このページは静的HTML＋Google Apps Script公開JSONPでテーブル表示／絞込を行うデモです。</p>
+  <h1>貸出PCリストデモ</h1>
 
   <section>
-    <h2>① ボタンを押すとメッセージを表示</h2>
+    <h2>① メッセージ表示</h2>
     <button onclick="showMessage()">メッセージを表示</button>
     <p id="messageArea"></p>
   </section>
 
   <section>
-    <h2>② 入力フォームの内容を表示</h2>
-    <input type="text" id="nameInput" placeholder="名前を入力してください">
+    <h2>② 名前入力</h2>
+    <input type="text" id="nameInput" placeholder="名前を入力">
     <button onclick="displayName()">表示</button>
     <p id="nameResult"></p>
   </section>
 
   <section>
-    <h2>③ 現在の時刻を表示</h2>
+    <h2>③ 現在の時刻</h2>
     <p>現在時刻：<span id="clock"></span></p>
   </section>
 
   <section>
-    <h2>④ 要素のスタイルを動的に変更</h2>
+    <h2>④ スタイル切替</h2>
     <button onclick="changeStyle()">スタイルを変更</button>
-    <p id="styleTarget">この文章のスタイルが変わります。</p>
+    <p id="styleTarget">このテキストのスタイルが変わります。</p>
   </section>
 
   <section>
-    <h2>⑤ 貸出PCリスト検索（GAS JSONP版）</h2>
-    <p>Google Apps ScriptのJSONPを使ってデータを取得・表示します。</p>
+    <h2>⑤ 貸出PCリスト検索</h2>
+    <p>最終更新：<span id="lastUpdate">読み込み中…</span></p>
     <input type="text" id="filterInput" placeholder="機種名で絞り込み" disabled onkeyup="filterPC()">
     <table id="pcTable">
       <thead><tr><th>No.</th><th>機種名</th><th>ステータス</th></tr></thead>
@@ -57,72 +55,75 @@
     </table>
   </section>
 
-  <footer>
-    <p>© 2025 JavaScript デモページ</p>
-  </footer>
+  <footer>© 2025 デモページ</footer>
 
   <script>
-    // ① メッセージを表示
-    function showMessage() {
-      document.getElementById("messageArea").textContent =
-        "こんにちは！GitHub Pages上でもJavaScriptは使えます。";
+    // ① メッセージ表示
+    function showMessage(){
+      document.getElementById('messageArea').textContent =
+        'こんにちは！JavaScript動作中。';
     }
-
-    // ② 入力された名前を表示
-    function displayName() {
-      const name = document.getElementById("nameInput").value;
-      document.getElementById("nameResult").textContent =
-        name ? `こんにちは、${name}さん！` : "名前が入力されていません。";
+    // ② 名前表示
+    function displayName(){
+      const name = document.getElementById('nameInput').value;
+      document.getElementById('nameResult').textContent =
+        name ? `こんにちは、${name}さん！` : '名前が未入力です。';
     }
-
-    // ③ 現在の時刻を1秒ごとに更新
-    function updateClock() {
-      document.getElementById("clock").textContent =
+    // ③ 現在時刻更新
+    function updateClock(){
+      document.getElementById('clock').textContent =
         new Date().toLocaleTimeString();
     }
-    setInterval(updateClock, 1000);
+    setInterval(updateClock,1000);
     updateClock();
-
-    // ④ スタイル変更
-    function changeStyle() {
-      const t = document.getElementById("styleTarget");
-      t.style.color = "white";
-      t.style.backgroundColor = "#2980b9";
-      t.style.padding = "10px";
-      t.style.borderRadius = "6px";
+    // ④ スタイル切替
+    function changeStyle(){
+      const el = document.getElementById('styleTarget');
+      el.style.backgroundColor = '#2980b9';
+      el.style.color = '#ffffff';
+      el.style.padding = '8px';
+      el.style.borderRadius = '4px';
     }
 
-    // ⑤ JSONPコールバックとしてテーブルを描画
-    function renderTable(data) {
+    // ⑤ JSONP コールバック
+    function renderTable(payload){
+      // 1) 最終更新時刻表示
+      document.getElementById('lastUpdate').textContent =
+        payload.lastUpdated;
+      // 2) データ行を描画
       const tbody = document.querySelector('#pcTable tbody');
       tbody.innerHTML = '';
-      data.slice(1).forEach(row => {
+      // payload.rows: [ [ヘッダ], [1行目], [2行目], ... ]
+      payload.rows.slice(1).forEach(row=>{
         const tr = document.createElement('tr');
-        row.forEach(cell => {
+        row.forEach((cell, idx)=>{
           const td = document.createElement('td');
           td.textContent = cell;
+          // ステータス列の色分け
+          if(idx === 2){
+            if(cell === '利用可')      td.style.backgroundColor = 'rgba(135,206,250,0.3)';
+            else if(cell === '貸出中') td.style.backgroundColor = 'rgba(250,128,114,0.3)';
+          }
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
       });
       document.getElementById('filterInput').disabled = false;
     }
-
-    // ⑤ 絞込機能
-    function filterPC() {
+    // 絞込機能
+    function filterPC(){
       const kw = document.getElementById('filterInput').value.toLowerCase();
-      document.querySelectorAll('#pcTable tbody tr').forEach(tr => {
+      document.querySelectorAll('#pcTable tbody tr').forEach(tr=>{
         tr.classList.toggle('hidden',
           !tr.textContent.toLowerCase().includes(kw)
         );
       });
     }
-
-    // ⑤ JSONPタグを動的に追加
-    (function(){
+    // JSONP スクリプトを動的に追加
+    (()=>{
       const script = document.createElement('script');
-      script.src = 
-        'https://script.google.com/macros/s/AKfycbxnHxxgcqQLwo2dL2s8WPcQMDg0LYIf42MLv5jP3W35oqiKW4RrLfz7W525gXU220Cq/exec'
+      script.src =
+        'https://script.google.com/macros/s/AKfycbwkbjcOpBWN2Mpw1d9NW3bVq7WH7ed29ExcOIBChdOQ4_mbfpQ0Ar-Q0mux3QjxEq7p/exec'
         + '?callback=renderTable';
       document.body.appendChild(script);
     })();
