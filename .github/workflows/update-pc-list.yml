@@ -1,0 +1,45 @@
+name: Update PC List
+
+on:
+  workflow_dispatch:
+    inputs:
+      status_row:
+        description: '更新対象の行番号 (整数)'
+        required: true
+        type: number
+      new_status:
+        description: '新しいステータス (貸出中／利用可)'
+        required: true
+        type: string
+
+jobs:
+  update-excel:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install openpyxl
+        run: pip install openpyxl
+
+      - name: Update pc_list.xlsx
+        run: python update_pc.py
+        env:
+          INPUT_STATUS_ROW: ${{ github.event.inputs.status_row }}
+          INPUT_NEW_STATUS:  ${{ github.event.inputs.new_status }}
+
+      - name: Commit & Push changes
+        env:
+          PAT: ${{ secrets.PAT }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pc_list.xlsx
+          git commit -m "Update PC status: row=${{ github.event.inputs.status_row }} → ${{ github.event.inputs.new_status }}"
+          git push https://x-access-token:${PAT}@github.com/${{ github.repository }}.git HEAD:main
