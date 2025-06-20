@@ -97,129 +97,29 @@
     }
 
     // ⑤ 公開Google SheetsのCSVを取得してテーブルに表示
-    const CSV_URL = 
-      "<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>GitHub Pages × JavaScript 見本ページ（Sheets CSV版）</title>
-  <meta name="description" content="GitHub PagesでJavaScriptと公開Google SheetsのCSVを組み合わせた見本ページです。">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
-    h1 { color: #2c3e50; }
-    section { margin-bottom: 30px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    button { margin-top: 10px; padding: 8px 16px; font-size: 1em; }
-    input { padding: 6px; margin-right: 10px; }
-    #clock { font-weight: bold; font-size: 1.2em; color: #d35400; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background: #eee; }
-    tr.hidden { display: none; }
-  </style>
-</head>
-<body>
-
-  <h1>GitHub Pages × JavaScript 見本ページ（Sheets CSV版）</h1>
-  <p>このページは静的HTML＋公開Google Sheets CSVでテーブル表示／絞込を行うデモです。</p>
-
-  <section>
-    <h2>① ボタンを押すとメッセージを表示</h2>
-    <button onclick="showMessage()">メッセージを表示</button>
-    <p id="messageArea"></p>
-  </section>
-
-  <section>
-    <h2>② 入力フォームの内容を表示</h2>
-    <input type="text" id="nameInput" placeholder="名前を入力してください">
-    <button onclick="displayName()">表示</button>
-    <p id="nameResult"></p>
-  </section>
-
-  <section>
-    <h2>③ 現在の時刻を表示</h2>
-    <p>現在時刻：<span id="clock"></span></p>
-  </section>
-
-  <section>
-    <h2>④ 要素のスタイルを動的に変更</h2>
-    <button onclick="changeStyle()">スタイルを変更</button>
-    <p id="styleTarget">この文章のスタイルが変わります。</p>
-  </section>
-
-  <section>
-    <h2>⑤ 貸出PCリスト検索（Google Sheets CSV版）</h2>
-    <p>公開したGoogle SheetsのCSVを取得して表示します。</p>
-    <input type="text" id="filterInput" placeholder="機種名で絞り込み" disabled onkeyup="filterPC()">
-    <table id="pcTable">
-      <thead>
-        <tr><th>No.</th><th>機種名</th><th>ステータス</th></tr>
-      </thead>
-      <tbody>
-        <!-- CSV読み込み後にここへ行を追加 -->
-      </tbody>
-    </table>
-  </section>
-
-  <footer>
-    <p>© 2025 JavaScript デモページ</p>
-  </footer>
-
-  <script>
-    // ① メッセージを表示
-    function showMessage() {
-      document.getElementById("messageArea").textContent =
-        "こんにちは！GitHub Pages上でもJavaScriptは使えます。";
-    }
-
-    // ② 入力された名前を表示
-    function displayName() {
-      const name = document.getElementById("nameInput").value;
-      document.getElementById("nameResult").textContent =
-        name ? `こんにちは、${name}さん！` : "名前が入力されていません。";
-    }
-
-    // ③ 現在の時刻を1秒ごとに更新
-    function updateClock() {
-      document.getElementById("clock").textContent =
-        new Date().toLocaleTimeString();
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    // ④ スタイル変更
-    function changeStyle() {
-      const t = document.getElementById("styleTarget");
-      t.style.color = "white";
-      t.style.backgroundColor = "#2980b9";
-      t.style.padding = "10px";
-      t.style.borderRadius = "6px";
-    }
-
-    // ⑤ 公開Google SheetsのCSVを取得してテーブルに表示
-    const CSV_URL = 
-      "https://docs.google.com/spreadsheets/d/e/2PACX-1vQwNV8pW8xFuq6rr0PR8xnqPWgHzWuxYzM3FXR1iyu6HvdQMiFC8urVFnH6tQOVbIUZhlzt1n-PSncM/pub?gid=0&single=true&output=csv";
+    const CSV_URL =
+      "https://docs.google.com/spreadsheets/d/1wrDe60vy9p5gs3bkzKMZTCPwnbD577v6zneXSoccoM8/export?format=csv";
 
     fetch(CSV_URL)
       .then(res => res.text())
       .then(csvText => {
         const rows = csvText.trim().split(/\r?\n/).map(r => r.split(","));
         renderTable(rows);
-        document.getElementById('filterInput').disabled = false;
+        document.getElementById("filterInput").disabled = false;
       })
       .catch(err => {
         console.error(err);
-        alert('CSV読み込み失敗：' + err);
+        alert("CSV読み込み失敗：" + err);
       });
 
     // テーブル描画関数
     function renderTable(data) {
-      const tbody = document.querySelector('#pcTable tbody');
-      tbody.innerHTML = '';
+      const tbody = document.querySelector("#pcTable tbody");
+      tbody.innerHTML = "";
       data.slice(1).forEach(row => {
-        const tr = document.createElement('tr');
+        const tr = document.createElement("tr");
         row.forEach(cell => {
-          const td = document.createElement('td');
+          const td = document.createElement("td");
           td.textContent = cell;
           tr.appendChild(td);
         });
@@ -229,50 +129,12 @@
 
     // 絞込機能
     function filterPC() {
-      const kw = document.getElementById('filterInput').value.toLowerCase();
-      document.querySelectorAll('#pcTable tbody tr').forEach(tr => {
-        tr.classList.toggle('hidden',
-          !tr.textContent.toLowerCase().includes(kw)
-        );
-      });
-    }
-  </script>
-</body>
-</html>
-";
-
-    fetch(CSV_URL)
-      .then(res => res.text())
-      .then(csvText => {
-        const rows = csvText.trim().split(/\r?\n/).map(r => r.split(","));
-        renderTable(rows);
-        document.getElementById('filterInput').disabled = false;
-      })
-      .catch(err => {
-        console.error(err);
-        alert('CSV読み込み失敗：' + err);
-      });
-
-    // テーブル描画関数
-    function renderTable(data) {
-      const tbody = document.querySelector('#pcTable tbody');
-      tbody.innerHTML = '';
-      data.slice(1).forEach(row => {
-        const tr = document.createElement('tr');
-        row.forEach(cell => {
-          const td = document.createElement('td');
-          td.textContent = cell;
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-      });
-    }
-
-    // 絞込機能
-    function filterPC() {
-      const kw = document.getElementById('filterInput').value.toLowerCase();
-      document.querySelectorAll('#pcTable tbody tr').forEach(tr => {
-        tr.classList.toggle('hidden',
+      const kw = document
+        .getElementById("filterInput")
+        .value.toLowerCase();
+      document.querySelectorAll("#pcTable tbody tr").forEach(tr => {
+        tr.classList.toggle(
+          "hidden",
           !tr.textContent.toLowerCase().includes(kw)
         );
       });
