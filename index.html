@@ -2,8 +2,8 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>GitHub Pages × JavaScript 見本ページ（Sheets CSV版）</title>
-  <meta name="description" content="GitHub PagesでJavaScriptと公開Google SheetsのCSVを組み合わせた見本ページです。">
+  <title>GitHub Pages × JavaScript 見本ページ（GAS JSON版）</title>
+  <meta name="description" content="GitHub PagesでJavaScriptとGoogle Apps Script公開JSONを組み合わせた見本ページです。">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
@@ -20,8 +20,8 @@
 </head>
 <body>
 
-  <h1>GitHub Pages × JavaScript 見本ページ（Sheets CSV版）</h1>
-  <p>このページは静的HTML＋公開Google Sheets CSVでテーブル表示／絞込を行うデモです。</p>
+  <h1>GitHub Pages × JavaScript 見本ページ（GAS JSON版）</h1>
+  <p>このページは静的HTML＋Google Apps Script公開JSONでテーブル表示／絞込を行うデモです。</p>
 
   <section>
     <h2>① ボタンを押すとメッセージを表示</h2>
@@ -48,15 +48,15 @@
   </section>
 
   <section>
-    <h2>⑤ 貸出PCリスト検索（Google Sheets CSV版）</h2>
-    <p>公開したGoogle SheetsのCSVを取得して表示します。</p>
+    <h2>⑤ 貸出PCリスト検索（GAS JSON版）</h2>
+    <p>Google Apps Scriptで公開したJSONを取得して表示します。</p>
     <input type="text" id="filterInput" placeholder="機種名で絞り込み" disabled onkeyup="filterPC()">
     <table id="pcTable">
       <thead>
         <tr><th>No.</th><th>機種名</th><th>ステータス</th></tr>
       </thead>
       <tbody>
-        <!-- CSV読み込み後にここへ行を追加 -->
+        <!-- JSON読み込み後にここへ行を追加 -->
       </tbody>
     </table>
   </section>
@@ -96,20 +96,23 @@
       t.style.borderRadius = "6px";
     }
 
-    // ⑤ 公開Google SheetsのCSVを取得してテーブルに表示
-    const CSV_URL =
-      "https://docs.google.com/spreadsheets/d/1wrDe60vy9p5gs3bkzKMZTCPwnbD577v6zneXSoccoM8/export?format=csv";
+    // ⑤ Google Apps ScriptのWebアプリURL に置き換え
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbx_g0nOmXzu8h9DRsFGXVYMxM768DzNT2xufzEf1RFOQE0Wn06NAcMlbv_mQ4mtHLN6/exec";
 
-    fetch(CSV_URL)
-      .then(res => res.text())
-      .then(csvText => {
-        const rows = csvText.trim().split(/\r?\n/).map(r => r.split(","));
-        renderTable(rows);
+    fetch(API_URL)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        // data は二次元配列 [[No, 機種名, ステータス], ...]
+        renderTable(data);
         document.getElementById("filterInput").disabled = false;
       })
       .catch(err => {
         console.error(err);
-        alert("CSV読み込み失敗：" + err);
+        alert("データ取得失敗：" + err);
       });
 
     // テーブル描画関数
@@ -129,9 +132,7 @@
 
     // 絞込機能
     function filterPC() {
-      const kw = document
-        .getElementById("filterInput")
-        .value.toLowerCase();
+      const kw = document.getElementById("filterInput").value.toLowerCase();
       document.querySelectorAll("#pcTable tbody tr").forEach(tr => {
         tr.classList.toggle(
           "hidden",
