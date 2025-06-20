@@ -17,8 +17,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repo (with PAT)
         uses: actions/checkout@v4
+        with:
+          # ここはスペース2つ＋token行をインデント
+          token: ${{ secrets.PAT }}
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -35,11 +38,12 @@ jobs:
           INPUT_NEW_STATUS:  ${{ github.event.inputs.new_status }}
 
       - name: Commit & Push changes
-        env:
-          PAT: ${{ secrets.PAT }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add pc_list.xlsx
-          git commit -m "Update PC status: row=${{ github.event.inputs.status_row }} → ${{ github.event.inputs.new_status }}"
-          git push https://x-access-token:${PAT}@github.com/${{ github.repository }}.git HEAD:main
+          git commit -m "Update PC status: row=${{ github.event.inputs.status_row }} → ${{ github.event.inputs.new_status }}" || echo "No changes to commit"
+          git push
+        env:
+          # checkout に渡しているので push はシンプルに `git push`
+          PAT: ${{ secrets.PAT }}
