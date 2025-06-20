@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>GitHub Pages JavaScriptデモ</title>
+  <title>GitHub Pages × JavaScript 見本ページ</title>
   <meta name="description" content="GitHub PagesでJavaScriptが使えることを示す見本ページです。">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
@@ -35,6 +35,22 @@
       font-size: 1.2em;
       color: #d35400;
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #eee;
+    }
+    tr.hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -66,6 +82,43 @@
     <p id="styleTarget">この文章のスタイルが変わります。</p>
   </section>
 
+  <section>
+    <h2>⑤ 貸出PCリスト検索</h2>
+    <p>テーブルの中から機種名を絞り込むことができます。</p>
+    <input type="text" id="filterInput" placeholder="PCを検索（例: Dell, ThinkPad）" onkeyup="filterPC()">
+    <table id="pcTable">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>機種名</th>
+          <th>ステータス</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>001</td><td>Dell XPS 13</td><td>貸出中</td></tr>
+        <tr><td>002</td><td>Lenovo ThinkPad T14</td><td>利用可</td></tr>
+        <tr><td>003</td><td>HP EliteBook 840</td><td>貸出中</td></tr>
+        <tr><td>004</td><td>Apple MacBook Air</td><td>利用可</td></tr>
+        <tr><td>005</td><td>Acer Aspire 5</td><td>利用可</td></tr>
+        <tr><td>006</td><td>Microsoft Surface Pro</td><td>貸出中</td></tr>
+        <tr><td>007</td><td>Dell Latitude 7490</td><td>利用可</td></tr>
+        <tr><td>008</td><td>Lenovo Yoga C940</td><td>貸出中</td></tr>
+        <tr><td>009</td><td>HP ProBook 450</td><td>利用可</td></tr>
+        <tr><td>010</td><td>Asus ZenBook 14</td><td>貸出中</td></tr>
+        <tr><td>011</td><td>Fujitsu Lifebook U9310</td><td>利用可</td></tr>
+        <tr><td>012</td><td>Dell G5 15</td><td>貸出中</td></tr>
+        <tr><td>013</td><td>Lenovo ThinkBook 13s</td><td>利用可</td></tr>
+        <tr><td>014</td><td>HP ZBook Firefly</td><td>貸出中</td></tr>
+        <tr><td>015</td><td>Apple MacBook Pro</td><td>利用可</td></tr>
+        <tr><td>016</td><td>Acer Swift 3</td><td>貸出中</td></tr>
+        <tr><td>017</td><td>Microsoft Surface Laptop</td><td>利用可</td></tr>
+        <tr><td>018</td><td>Dell Inspiron 15</td><td>貸出中</td></tr>
+        <tr><td>019</td><td>Lenovo IdeaPad S540</td><td>利用可</td></tr>
+        <tr><td>020</td><td>HP Chromebook 14</td><td>貸出中</td></tr>
+      </tbody>
+    </table>
+  </section>
+
   <footer>
     <p>© 2025 JavaScript デモページ</p>
   </footer>
@@ -73,24 +126,27 @@
   <script>
     // ① メッセージを表示する関数
     function showMessage() {
-      document.getElementById("messageArea").textContent = "こんにちは！GitHub Pages上でもJavaScriptは使えます。";
+      document.getElementById("messageArea").textContent =
+        "こんにちは！GitHub Pages上でもJavaScriptは使えます。";
     }
 
     // ② 入力された名前を表示する関数
     function displayName() {
       const name = document.getElementById("nameInput").value;
-      const output = name ? `こんにちは、${name}さん！` : "名前が入力されていません。";
+      const output = name
+        ? `こんにちは、${name}さん！`
+        : "名前が入力されていません。";
       document.getElementById("nameResult").textContent = output;
     }
 
     // ③ 現在の時刻を1秒ごとに表示
     function updateClock() {
       const now = new Date();
-      const timeStr = now.toLocaleTimeString();
-      document.getElementById("clock").textContent = timeStr;
+      document.getElementById("clock").textContent =
+        now.toLocaleTimeString();
     }
     setInterval(updateClock, 1000);
-    updateClock(); // 初期表示
+    updateClock();
 
     // ④ スタイル変更
     function changeStyle() {
@@ -99,6 +155,23 @@
       target.style.backgroundColor = "#2980b9";
       target.style.padding = "10px";
       target.style.borderRadius = "6px";
+    }
+
+    // ⑤ 貸出PCリストを絞り込む関数
+    function filterPC() {
+      const filter = document
+        .getElementById("filterInput")
+        .value.toLowerCase();
+      const rows = document
+        .querySelectorAll("#pcTable tbody tr");
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        if (text.includes(filter)) {
+          row.classList.remove("hidden");
+        } else {
+          row.classList.add("hidden");
+        }
+      });
     }
   </script>
 
