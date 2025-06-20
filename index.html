@@ -2,61 +2,26 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>GitHub Pages × JavaScript 見本ページ</title>
-  <meta name="description" content="GitHub PagesでJavaScriptが使えることを示す見本ページです。">
+  <title>GitHub Pages × JavaScript 見本ページ（Excel版）</title>
+  <meta name="description" content="GitHub PagesでJavaScriptとSheetJSを組み合わせた見本ページです。">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-      background: #f9f9f9;
-    }
-    h1 {
-      color: #2c3e50;
-    }
-    section {
-      margin-bottom: 30px;
-      padding: 15px;
-      background: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    button {
-      margin-top: 10px;
-      padding: 8px 16px;
-      font-size: 1em;
-    }
-    input {
-      padding: 6px;
-      margin-right: 10px;
-    }
-    #clock {
-      font-weight: bold;
-      font-size: 1.2em;
-      color: #d35400;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background: #eee;
-    }
-    tr.hidden {
-      display: none;
-    }
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    h1 { color: #2c3e50; }
+    section { margin-bottom: 30px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    button { margin-top: 10px; padding: 8px 16px; font-size: 1em; }
+    input { padding: 6px; margin-right: 10px; }
+    #clock { font-weight: bold; font-size: 1.2em; color: #d35400; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #eee; }
+    tr.hidden { display: none; }
   </style>
 </head>
 <body>
 
-  <h1>GitHub Pages × JavaScript 見本ページ</h1>
-  <p>このページは静的HTMLのみで構成されており、JavaScriptによる動的な動作を体験できます。</p>
+  <h1>GitHub Pages × JavaScript 見本ページ（Excel版）</h1>
+  <p>このページは静的HTML＋SheetJSでExcelファイルを読み込み、テーブル表示／絞込を行うデモです。</p>
 
   <section>
     <h2>① ボタンを押すとメッセージを表示</h2>
@@ -83,38 +48,15 @@
   </section>
 
   <section>
-    <h2>⑤ 貸出PCリスト検索</h2>
-    <p>テーブルの中から機種名を絞り込むことができます。</p>
-    <input type="text" id="filterInput" placeholder="PCを検索（例: Dell, ThinkPad）" onkeyup="filterPC()">
+    <h2>⑤ 貸出PCリスト検索（Excel 読み込み版）</h2>
+    <p>リポジトリ内の <code>pc_list.xlsx</code> からデータを読み込みます。</p>
+    <input type="text" id="filterInput" placeholder="機種名で絞り込み" disabled onkeyup="filterPC()">
     <table id="pcTable">
       <thead>
-        <tr>
-          <th>No.</th>
-          <th>機種名</th>
-          <th>ステータス</th>
-        </tr>
+        <tr><th>No.</th><th>機種名</th><th>ステータス</th></tr>
       </thead>
       <tbody>
-        <tr><td>001</td><td>Dell XPS 13</td><td>貸出中</td></tr>
-        <tr><td>002</td><td>Lenovo ThinkPad T14</td><td>利用可</td></tr>
-        <tr><td>003</td><td>HP EliteBook 840</td><td>貸出中</td></tr>
-        <tr><td>004</td><td>Apple MacBook Air</td><td>利用可</td></tr>
-        <tr><td>005</td><td>Acer Aspire 5</td><td>利用可</td></tr>
-        <tr><td>006</td><td>Microsoft Surface Pro</td><td>貸出中</td></tr>
-        <tr><td>007</td><td>Dell Latitude 7490</td><td>利用可</td></tr>
-        <tr><td>008</td><td>Lenovo Yoga C940</td><td>貸出中</td></tr>
-        <tr><td>009</td><td>HP ProBook 450</td><td>利用可</td></tr>
-        <tr><td>010</td><td>Asus ZenBook 14</td><td>貸出中</td></tr>
-        <tr><td>011</td><td>Fujitsu Lifebook U9310</td><td>利用可</td></tr>
-        <tr><td>012</td><td>Dell G5 15</td><td>貸出中</td></tr>
-        <tr><td>013</td><td>Lenovo ThinkBook 13s</td><td>利用可</td></tr>
-        <tr><td>014</td><td>HP ZBook Firefly</td><td>貸出中</td></tr>
-        <tr><td>015</td><td>Apple MacBook Pro</td><td>利用可</td></tr>
-        <tr><td>016</td><td>Acer Swift 3</td><td>貸出中</td></tr>
-        <tr><td>017</td><td>Microsoft Surface Laptop</td><td>利用可</td></tr>
-        <tr><td>018</td><td>Dell Inspiron 15</td><td>貸出中</td></tr>
-        <tr><td>019</td><td>Lenovo IdeaPad S540</td><td>利用可</td></tr>
-        <tr><td>020</td><td>HP Chromebook 14</td><td>貸出中</td></tr>
+        <!-- Excel 読み込み後にここへ行を追加 -->
       </tbody>
     </table>
   </section>
@@ -123,54 +65,75 @@
     <p>© 2025 JavaScript デモページ</p>
   </footer>
 
+  <!-- SheetJS ライブラリ（CDN経由） -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script>
-    // ① メッセージを表示する関数
+    // ① メッセージを表示
     function showMessage() {
       document.getElementById("messageArea").textContent =
         "こんにちは！GitHub Pages上でもJavaScriptは使えます。";
     }
 
-    // ② 入力された名前を表示する関数
+    // ② 入力された名前を表示
     function displayName() {
       const name = document.getElementById("nameInput").value;
-      const output = name
-        ? `こんにちは、${name}さん！`
-        : "名前が入力されていません。";
-      document.getElementById("nameResult").textContent = output;
+      document.getElementById("nameResult").textContent =
+        name ? `こんにちは、${name}さん！` : "名前が入力されていません。";
     }
 
-    // ③ 現在の時刻を1秒ごとに表示
+    // ③ 現在の時刻を1秒ごとに更新
     function updateClock() {
-      const now = new Date();
       document.getElementById("clock").textContent =
-        now.toLocaleTimeString();
+        new Date().toLocaleTimeString();
     }
     setInterval(updateClock, 1000);
     updateClock();
 
     // ④ スタイル変更
     function changeStyle() {
-      const target = document.getElementById("styleTarget");
-      target.style.color = "white";
-      target.style.backgroundColor = "#2980b9";
-      target.style.padding = "10px";
-      target.style.borderRadius = "6px";
+      const t = document.getElementById("styleTarget");
+      t.style.color = "white";
+      t.style.backgroundColor = "#2980b9";
+      t.style.padding = "10px";
+      t.style.borderRadius = "6px";
     }
 
-    // ⑤ 貸出PCリストを絞り込む関数
+    // ⑤ pc_list.xlsx を読み込んでテーブルに表示
+    fetch('pc_list.xlsx')
+      .then(res => res.arrayBuffer())
+      .then(ab => {
+        const wb = XLSX.read(ab, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        // 1行目をヘッダー、2行目以降をデータとして2次元配列取得
+        const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        renderTable(data);
+        document.getElementById('filterInput').disabled = false;
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Excel ファイルの読み込みに失敗しました。');
+      });
+
+    // テーブル描画関数
+    function renderTable(data) {
+      const tbody = document.querySelector('#pcTable tbody');
+      tbody.innerHTML = '';
+      data.slice(1).forEach(row => {
+        const tr = document.createElement('tr');
+        row.forEach(cell => {
+          const td = document.createElement('td');
+          td.textContent = cell;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 絞込機能
     function filterPC() {
-      const filter = document
-        .getElementById("filterInput")
-        .value.toLowerCase();
-      const rows = document
-        .querySelectorAll("#pcTable tbody tr");
-      rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        if (text.includes(filter)) {
-          row.classList.remove("hidden");
-        } else {
-          row.classList.add("hidden");
-        }
+      const kw = document.getElementById('filterInput').value.toLowerCase();
+      document.querySelectorAll('#pcTable tbody tr').forEach(tr => {
+        tr.classList.toggle('hidden', !tr.textContent.toLowerCase().includes(kw));
       });
     }
   </script>
