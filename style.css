@@ -163,25 +163,28 @@ footer {
 }
 }
 
-.spreadsheet-wrap {
-  position: relative;
+/* ───────── Google スプレッドシート埋め込み ───────── */
+.sheet-iframe {
+  /* レイアウトに従う普通のブロック要素 */
+  display: block;
+
+  /* 幅は常に親いっぱい（#outer の 1000px もスマホの 100% も対応） */
   width: 100%;
-  /* 比率16:9の場合は56.25%、4:3なら75% */
-  padding-top: 56.25%;
-  margin: 20px 0;
-}
-.spreadsheet-wrap iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+
+  /* 高さを画面サイズに合わせて可変
+     - 400px 以上
+     - 60vw（ビューポート幅の 60%）を基準
+     - 900px を上限
+     clamp() は対応ブラウザがほぼ揃っています  */
+  height: clamp(400px, 60vw, 900px);
+
   border: none;
+
+  /* ←ここが重要！
+     float レイアウトの直後に来ても必ず下に落ちるようにする */
+  clear: both;
 }
 
-/* 画面が狭いときは高さを増やす（オプション） */
-@media screen and (max-width: 500px) {
-  .spreadsheet-wrap {
-    padding-top: 80%;
-  }
-}
+/* 高さをもっと固定にしたい場合は、上の clamp() を
+   例： height: 700px; にしても OK */
